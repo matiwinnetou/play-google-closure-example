@@ -24,19 +24,19 @@ public class SoyRenderer {
     private final SoyTemplateLoader soyTemplateLoader;
     private final SoyIdRenamingMap soyIdRenamingMap;
     private final SoyMsgBundleLoader soyMsgBundleLoader;
-    private final List<RuntimeDataProvider> runtimeDataProviderList;
+    private final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList;
 
     @Inject
     public SoyRenderer(final SoyCompiler soyCompiler,
                        final SoyTemplateLoader soyTemplateLoader,
                        final SoyMsgBundleLoader soyMsgBundleLoader,
-                       @Named("runtimeDataProviders") final List<RuntimeDataProvider> runtimeDataProviderList,
+                       @Named("runtimeDataProviders") final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList,
                        final SoyIdRenamingMap soyIdRenamingMap) {
         this.soyCompiler = soyCompiler;
         this.soyTemplateLoader = soyTemplateLoader;
         this.soyMsgBundleLoader = soyMsgBundleLoader;
         this.soyIdRenamingMap = soyIdRenamingMap;
-        this.runtimeDataProviderList = runtimeDataProviderList;
+        this.soyRuntimeDataProviderList = soyRuntimeDataProviderList;
     }
 
     public String render(final String templateName,
@@ -71,7 +71,7 @@ public class SoyRenderer {
                              final Map<String, ?> model) {
         final ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
         
-        runtimeDataProviderList.forEach(provider -> provider.injectData(request, response, model, builder));
+        soyRuntimeDataProviderList.forEach(provider -> builder.putAll(provider.injectData(request, response, model)));
 
         return new SoyMapData(builder.build());
     }

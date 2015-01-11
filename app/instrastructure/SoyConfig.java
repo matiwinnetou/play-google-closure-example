@@ -45,8 +45,8 @@ public class SoyConfig {
 
     @Bean
     @Named("runtimeDataProviders")
-    public List<RuntimeDataProvider> runtimeDataProviderList() {
-        return ImmutableList.of(new HelloRuntimeDataProvider());
+    public List<SoyRuntimeDataProvider> runtimeDataProviderList() {
+        return ImmutableList.of(new HelloSoyRuntimeDataProvider());
     }
 
     @Bean
