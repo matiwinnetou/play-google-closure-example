@@ -1,5 +1,6 @@
 package instrastructure;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
@@ -14,6 +15,7 @@ import soy.*;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -42,6 +44,12 @@ public class SoyConfig {
     }
 
     @Bean
+    @Named("runtimeDataProviders")
+    public List<RuntimeDataProvider> runtimeDataProviderList() {
+        return ImmutableList.of(new HelloRuntimeDataProvider());
+    }
+
+    @Bean
     public SoyGeneralOptions soyGeneralOptions() {
         return new SoyGeneralOptions();
     }
@@ -53,7 +61,11 @@ public class SoyConfig {
 
     @Bean
     public SoyRenderer soyRenderer() {
-        return new SoyRenderer(soyCompiler(), soyTemplateLoader(), soyMsgBundleLoader(), soyIdRenamingMap());
+        return new SoyRenderer(soyCompiler(),
+                soyTemplateLoader(),
+                soyMsgBundleLoader(),
+                runtimeDataProviderList(),
+                soyIdRenamingMap());
     }
 
     @Bean

@@ -1,13 +1,19 @@
 package soy;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.template.soy.SoyFileSet;
+import com.google.template.soy.data.SoyMapData;
+import com.google.template.soy.data.SoyRecord;
 import com.google.template.soy.msgs.SoyMsgBundle;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
 import com.google.template.soy.shared.SoyIdRenamingMap;
 import com.google.template.soy.tofu.SoyTofu;
+import play.mvc.Http;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -18,22 +24,26 @@ public class SoyRenderer {
     private final SoyTemplateLoader soyTemplateLoader;
     private final SoyIdRenamingMap soyIdRenamingMap;
     private final SoyMsgBundleLoader soyMsgBundleLoader;
+    private final List<RuntimeDataProvider> runtimeDataProviderList;
 
     @Inject
     public SoyRenderer(final SoyCompiler soyCompiler,
                        final SoyTemplateLoader soyTemplateLoader,
                        final SoyMsgBundleLoader soyMsgBundleLoader,
+                       @Named("runtimeDataProviders") final List<RuntimeDataProvider> runtimeDataProviderList,
                        final SoyIdRenamingMap soyIdRenamingMap) {
         this.soyCompiler = soyCompiler;
         this.soyTemplateLoader = soyTemplateLoader;
         this.soyMsgBundleLoader = soyMsgBundleLoader;
         this.soyIdRenamingMap = soyIdRenamingMap;
+        this.runtimeDataProviderList = runtimeDataProviderList;
     }
 
     public String render(final String templateName,
                          final Locale locale,
+                         final Http.Request request,
+                         final Http.Response response,
                          final Map<String, ?> model,
-                         final Map<String, ?> ijData,
                          final Set<String> activeDelegatePackages) {
         final SoyFileSet soyFileSet = soyTemplateLoader.build();
         final SoyTofu soyTofu = soyCompiler.compile(soyFileSet);
@@ -42,17 +52,28 @@ public class SoyRenderer {
         return soyTofu.newRenderer(templateName)
                 .setActiveDelegatePackageNames(activeDelegatePackages)
                 .setIdRenamingMap(soyIdRenamingMap)
-                .setIjData(ijData)
                 .setData(model)
+                .setIjData(ijData(request, response, model))
                 .setMsgBundle(soyMsgBundle)
                 .render();
     }
 
     public String render(final String templateName,
                          final Locale locale,
-                         final Map<String, ?> model,
-                         final Map<String, ?> ijData) {
-        return render(templateName, locale, model, ijData, ImmutableSet.of());
+                         final Http.Request request,
+                         final Http.Response response,
+                         final Map<String, ?> model) {
+        return render(templateName, locale, request, response, model, ImmutableSet.of());
     }
 
+    private SoyRecord ijData(final Http.Request request,
+                             final Http.Response response,
+                             final Map<String, ?> model) {
+        final ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
+        
+        runtimeDataProviderList.forEach(provider -> provider.injectData(request, response, model, builder));
+
+        return new SoyMapData(builder.build());
+    }
+    
 }

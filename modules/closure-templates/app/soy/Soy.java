@@ -1,6 +1,7 @@
 package soy;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import play.mvc.Controller;
 import play.twirl.api.Html;
 
@@ -17,11 +18,11 @@ public class Soy extends Controller {
     }
 
     public Html html(final String templateName, final Object model) {
-        return Html.apply(soyRenderer.render(templateName, locale(), ImmutableMap.of(), ImmutableMap.of()));
+        return Html.apply(soyRenderer.render(templateName, locale(), request(), response(), ImmutableMap.of(), ImmutableSet.of()));
     }
 
     public Html html(final String templateName) {
-        return Html.apply(soyRenderer.render(templateName, locale(), ImmutableMap.of(), ImmutableMap.of()));
+        return Html.apply(soyRenderer.render(templateName, locale(), request(), response(), ImmutableMap.of()));
     }
 
     private Locale locale() {
