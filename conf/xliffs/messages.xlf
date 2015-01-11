@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file original="SoyMsgBundle" datatype="x-soy-msg-bundle" xml:space="preserve" source-language="en">
+    <body>
+      <trans-unit id="80063835229110179" datatype="html">
+        <source>Fuel Consumption Combined</source>
+        <note priority="1" from="meaning">I18N.VEHICLE.Fuel_Consumption_Combined</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
