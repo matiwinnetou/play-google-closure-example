@@ -2,7 +2,6 @@ package soy;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.template.soy.SoyFileSet;
 import com.google.template.soy.data.SoyMapData;
 import com.google.template.soy.data.SoyRecord;
 import com.google.template.soy.msgs.SoyMsgBundle;
@@ -21,19 +20,16 @@ import java.util.Set;
 public class SoyRenderer {
 
     private final SoyCompiler soyCompiler;
-    private final SoyTemplateLoader soyTemplateLoader;
     private final SoyIdRenamingMap soyIdRenamingMap;
     private final SoyMsgBundleLoader soyMsgBundleLoader;
     private final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList;
 
     @Inject
     public SoyRenderer(final SoyCompiler soyCompiler,
-                       final SoyTemplateLoader soyTemplateLoader,
                        final SoyMsgBundleLoader soyMsgBundleLoader,
                        @Named("runtimeDataProviders") final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList,
                        final SoyIdRenamingMap soyIdRenamingMap) {
         this.soyCompiler = soyCompiler;
-        this.soyTemplateLoader = soyTemplateLoader;
         this.soyMsgBundleLoader = soyMsgBundleLoader;
         this.soyIdRenamingMap = soyIdRenamingMap;
         this.soyRuntimeDataProviderList = soyRuntimeDataProviderList;
@@ -45,8 +41,7 @@ public class SoyRenderer {
                          final Http.Response response,
                          final Map<String, ?> model,
                          final Set<String> activeDelegatePackages) {
-        final SoyFileSet soyFileSet = soyTemplateLoader.build();
-        final SoyTofu soyTofu = soyCompiler.compile(soyFileSet);
+        final SoyTofu soyTofu = soyCompiler.get();
         final SoyMsgBundle soyMsgBundle = soyMsgBundleLoader.getSoyMsgBundleForLocale(locale);
 
         return soyTofu.newRenderer(templateName)

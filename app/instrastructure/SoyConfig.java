@@ -3,6 +3,7 @@ package instrastructure;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.template.soy.SoyFileSet;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
 import com.google.template.soy.shared.SoyGeneralOptions;
 import com.google.template.soy.shared.SoyIdRenamingMap;
@@ -55,14 +56,18 @@ public class SoyConfig {
     }
 
     @Bean
+    public SoyFileSet soyFileSet() {
+        return soyTemplateLoader().build();
+    }
+
+    @Bean
     public SoyCompiler soyCompiler() {
-        return new SoyCompiler(soyTofuOptions());
+        return new SoyCompiler(application, soyFileSet(), soyTofuOptions());
     }
 
     @Bean
     public SoyRenderer soyRenderer() {
         return new SoyRenderer(soyCompiler(),
-                soyTemplateLoader(),
                 soyMsgBundleLoader(),
                 runtimeDataProviderList(),
                 soyIdRenamingMap());
