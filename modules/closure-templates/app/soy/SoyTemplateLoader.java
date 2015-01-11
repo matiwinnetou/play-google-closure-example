@@ -18,19 +18,21 @@ public class SoyTemplateLoader {
     private final Set<ClassPath.ResourceInfo> resourceInfos;
     private final SoyGeneralOptions soyGeneralOptions;
     private final Map<String,?> compileTimeGlobals;
+    private final SoyFileSet.Builder builder;
 
     @Inject
     public SoyTemplateLoader(final Application application,
+                             final SoyFileSet.Builder soyFileSetBuilder,
                              @Named("compileTimeGlobals") final Map<String,?> compileTimeGlobals,
                              final SoyGeneralOptions soyGeneralOptions) {
         this.application = application;
         this.resourceInfos = Resources.resources(application);
         this.compileTimeGlobals = compileTimeGlobals;
         this.soyGeneralOptions = soyGeneralOptions;
+        this.builder = soyFileSetBuilder;
     }
 
     public SoyFileSet build() {
-        final SoyFileSet.Builder builder = SoyFileSet.builder();
         builder.setGeneralOptions(soyGeneralOptions);
         builder.setAllowExternalCalls(true);
         builder.setCompileTimeGlobals(compileTimeGlobals);

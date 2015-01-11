@@ -3,7 +3,10 @@ package instrastructure;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.template.soy.SoyFileSet;
+import com.google.template.soy.SoyModule;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
 import com.google.template.soy.shared.SoyGeneralOptions;
 import com.google.template.soy.shared.SoyIdRenamingMap;
@@ -27,7 +30,7 @@ public class SoyConfig {
 
     @Bean
     public SoyTemplateLoader soyTemplateLoader() {
-        return new SoyTemplateLoader(application, compileTimeGlobals(), soyGeneralOptions());
+        return new SoyTemplateLoader(application, soyFleSetBuilder(), compileTimeGlobals(), soyGeneralOptions());
     }
 
     @Bean
@@ -48,6 +51,17 @@ public class SoyConfig {
     @Named("runtimeDataProviders")
     public List<SoyRuntimeDataProvider> runtimeDataProviderList() {
         return ImmutableList.of(new HelloSoyRuntimeDataProvider());
+    }
+
+    @Bean
+    @Named("googleClosureInjector")
+    public Injector googleClosureInjector() {
+        return Guice.createInjector(new SoyModule());
+    }
+
+    @Bean
+    public SoyFileSet.Builder soyFleSetBuilder() {
+        return googleClosureInjector().getInstance(SoyFileSet.Builder.class);
     }
 
     @Bean
