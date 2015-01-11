@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 public class SoyRenderer {
@@ -39,7 +38,7 @@ public class SoyRenderer {
                          final Locale locale,
                          final Http.Request request,
                          final Http.Response response,
-                         final Map<String, ?> model,
+                         final SoyRecord model,
                          final Set<String> activeDelegatePackages) {
         final SoyTofu soyTofu = soyCompiler.get();
         final SoyMsgBundle soyMsgBundle = soyMsgBundleLoader.getSoyMsgBundleForLocale(locale);
@@ -57,13 +56,13 @@ public class SoyRenderer {
                          final Locale locale,
                          final Http.Request request,
                          final Http.Response response,
-                         final Map<String, ?> model) {
+                         final SoyRecord model) {
         return render(templateName, locale, request, response, model, ImmutableSet.of());
     }
 
     private SoyRecord ijData(final Http.Request request,
                              final Http.Response response,
-                             final Map<String, ?> model) {
+                             final SoyRecord model) {
         final ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
         
         soyRuntimeDataProviderList.forEach(provider -> builder.putAll(provider.injectData(request, response, model)));
