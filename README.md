@@ -1,1 +1,1 @@
-# play-google-closure-example
+Demonstrates google closure templates (2014-04-22) and play 2.3.x integration with spring
