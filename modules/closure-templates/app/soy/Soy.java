@@ -3,6 +3,8 @@ package soy;
 import com.google.common.collect.ImmutableSet;
 import com.google.template.soy.data.SoyMapData;
 import com.google.template.soy.data.SoyRecord;
+import com.google.template.soy.data.SoyValueHelper;
+import com.google.template.soy.data.SoyValueProvider;
 import play.mvc.Controller;
 import play.twirl.api.Html;
 
@@ -15,10 +17,20 @@ import java.util.Set;
 public class Soy extends Controller {
 
     private final SoyRenderer soyRenderer;
+    private final SoyValueHelper soyValueHelper;
 
     @Inject
-    public Soy(final SoyRenderer soyRenderer) {
+    public Soy(final SoyRenderer soyRenderer,
+               final SoyValueHelper soyValueHelper) {
         this.soyRenderer = soyRenderer;
+        this.soyValueHelper = soyValueHelper;
+    }
+
+    public Html html(final String templateName, final Object model) {
+        final Set<String> activeDelegatePackages = activeDelegatePackages();
+        //final SoyValueProvider convert = soyValueHelper.convert(model);
+
+        return Html.apply(soyRenderer.render(templateName, locale(), request(), response(), new SoyMapData(), activeDelegatePackages));
     }
 
     public Html html(final String templateName, final SoyRecord model) {

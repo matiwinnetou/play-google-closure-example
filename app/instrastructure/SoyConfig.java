@@ -7,6 +7,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.template.soy.SoyFileSet;
 import com.google.template.soy.SoyModule;
+import com.google.template.soy.data.SoyValueHelper;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
 import com.google.template.soy.shared.SoyGeneralOptions;
 import com.google.template.soy.shared.SoyIdRenamingMap;
@@ -56,12 +57,17 @@ public class SoyConfig {
     @Bean
     @Named("googleClosureInjector")
     public Injector googleClosureInjector() {
-        return Guice.createInjector(new SoyModule());
+        return Guice.createInjector(new SoyModule(), new MySoyModule());
     }
 
     @Bean
     public SoyFileSet.Builder soyFleSetBuilder() {
         return googleClosureInjector().getInstance(SoyFileSet.Builder.class);
+    }
+
+    @Bean
+    public SoyValueHelper soyValueHelper() {
+        return googleClosureInjector().getInstance(SoyValueHelper.class);
     }
 
     @Bean
@@ -89,7 +95,7 @@ public class SoyConfig {
 
     @Bean
     public Soy soy() {
-        return new Soy(soyRenderer());
+        return new Soy(soyRenderer(), soyValueHelper());
     }
 
     @Bean
