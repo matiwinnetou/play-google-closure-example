@@ -1,9 +1,8 @@
-package soy;
+package soy.ij;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.template.soy.data.SoyRecord;
 import play.mvc.Http;
-import soy.SoyRuntimeDataProvider;
 
 public class HelloSoyRuntimeDataProvider implements SoyRuntimeDataProvider {
 

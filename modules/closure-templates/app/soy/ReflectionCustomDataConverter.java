@@ -1,12 +1,17 @@
 package soy;
 
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.google.template.soy.data.*;
+import com.google.template.soy.data.SoyCustomValueConverter;
+import com.google.template.soy.data.SoyListData;
+import com.google.template.soy.data.SoyMapData;
+import com.google.template.soy.data.SoyValueConverter;
+import com.google.template.soy.data.SoyValueProvider;
 import com.google.template.soy.data.restricted.NullData;
-
-import javax.inject.Inject;
 
 public class ReflectionCustomDataConverter implements SoyCustomValueConverter {
 
@@ -22,18 +27,22 @@ public class ReflectionCustomDataConverter implements SoyCustomValueConverter {
         return jsonToSoyData(gson.toJsonTree(obj), valueConverter);
     }
 
-    public static SoyValueProvider jsonToSoyData(final JsonElement el, final SoyValueConverter soyValueConverter) {
+    private static @Nullable SoyValueProvider jsonToSoyData(final JsonElement el, final SoyValueConverter soyValueConverter) {
         if (el == null || el.isJsonNull()) {
             return NullData.INSTANCE;
         } 
         if (el.isJsonObject()) {
             final SoyMapData map = new SoyMapData();
-            el.getAsJsonObject().entrySet().forEach(entry -> map.put(entry.getKey(), jsonToSoyData(entry.getValue(), soyValueConverter)));
+            el.getAsJsonObject().entrySet().forEach(entry -> {
+                map.put(entry.getKey(), jsonToSoyData(entry.getValue(), soyValueConverter));
+            });
             return map;
         } 
         if (el.isJsonArray()) {
             final SoyListData list = new SoyListData();
-            el.getAsJsonArray().forEach(item -> list.add(jsonToSoyData(item, soyValueConverter)));
+            el.getAsJsonArray().forEach(item -> {
+                list.add(jsonToSoyData(item, soyValueConverter));
+            });
             return list;
         }
         if (el.isJsonPrimitive()) {

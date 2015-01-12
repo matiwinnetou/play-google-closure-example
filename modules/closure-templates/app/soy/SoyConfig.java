@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.template.soy.SoyFileSet;
@@ -17,6 +16,9 @@ import com.google.template.soy.tofu.SoyTofuOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import play.Application;
+import soy.ij.HelloSoyRuntimeDataProvider;
+import soy.ij.SoyRuntimeDataProvider;
+import soy.modules.SoyModule2;
 
 import javax.inject.Inject;
 import javax.inject.Named;

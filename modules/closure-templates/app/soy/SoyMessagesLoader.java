@@ -20,7 +20,7 @@ public class SoyMessagesLoader implements SoyMsgBundleLoader {
 
     private final SoyMsgBundleHandler soyMsgBundleHandler;
 
-    private final Cache<Locale, SoyMsgBundle> localeSoyMsgBundleMap = CacheBuilder.newBuilder().build();
+    private final Cache<Locale, SoyMsgBundle> cache = CacheBuilder.newBuilder().build();
 
     @Inject
     public SoyMessagesLoader(final Application application) {
@@ -39,7 +39,7 @@ public class SoyMessagesLoader implements SoyMsgBundleLoader {
 
     private SoyMsgBundle getNormal(final Locale locale) {
         try {
-            return localeSoyMsgBundleMap.get(locale, () -> findBundle(locale));
+            return cache.get(locale, () -> findBundle(locale));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }

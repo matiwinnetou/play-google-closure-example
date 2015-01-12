@@ -13,6 +13,8 @@ public class WordsModel {
     
     private Optional<String> hello = Optional.empty();
 
+    private int test = -1;
+
     public WordsModel(List<String> words, Optional<String> hello) {
         this.words = words;
         this.hello = hello;
@@ -20,6 +22,10 @@ public class WordsModel {
 
     public List<String> getWords() {
         return words;
+    }
+
+    public int getTest() {
+        return test;
     }
 
     public void setWords(List<String> words) {

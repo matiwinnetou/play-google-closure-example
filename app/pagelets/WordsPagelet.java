@@ -13,4 +13,8 @@ public class WordsPagelet {
         return F.Promise.pure(new WordsModel(Lists.newArrayList("test", "test2"), Optional.<String>empty()));
     }
 
+    public F.Promise<WordsModel> invoke2() {
+        return F.Promise.pure(new WordsModel(Lists.newArrayList("test", "test2"), Optional.of("test")));
+    }
+
 }

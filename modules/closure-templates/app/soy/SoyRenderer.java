@@ -9,6 +9,7 @@ import com.google.template.soy.msgs.SoyMsgBundleLoader;
 import com.google.template.soy.shared.SoyIdRenamingMap;
 import com.google.template.soy.tofu.SoyTofu;
 import play.mvc.Http;
+import soy.ij.SoyRuntimeDataProvider;
 
 import javax.inject.Inject;
 import javax.inject.Named;
