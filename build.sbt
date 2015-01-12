@@ -12,6 +12,7 @@ lazy val commonSettings = Seq(
   libraryDependencies += "org.springframework" % "spring-beans" % "4.0.3.RELEASE",
   libraryDependencies += "org.springframework" % "spring-context" % "4.0.3.RELEASE",
   libraryDependencies += "org.springframework" % "spring-expression" % "4.0.3.RELEASE",
+  libraryDependencies += "com.google.code.gson" % "gson" % "2.3.1",
   version := "1.0-SNAPSHOT"
 )
 

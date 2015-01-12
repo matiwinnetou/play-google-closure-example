@@ -1,15 +1,17 @@
 package pagelets;
 
+import java.util.Optional;
+
 public class HeaderModel {
 
-    private String title;
+    private Optional<String> title;
 
-    public String getTitle() {
+    public Optional<String> getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = Optional.of(title);
     }
 
 }

@@ -23,3 +23,15 @@ hello3
 <br>
 {hello}
 {/template}
+
+/**
+ * @param words
+ * @param? hello
+ */
+{template .index4}
+{foreach $w in $words}
+  word:{$w}<br>
+{/foreach}
+<br>
+{if $hello}{$hello}{/if}
+{/template}

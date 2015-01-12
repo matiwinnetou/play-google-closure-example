@@ -28,9 +28,9 @@ public class Soy extends Controller {
 
     public Html html(final String templateName, final Object model) {
         final Set<String> activeDelegatePackages = activeDelegatePackages();
-        //final SoyValueProvider convert = soyValueHelper.convert(model);
+        final SoyRecord soyRecord = (SoyRecord) soyValueHelper.convert(model);
 
-        return Html.apply(soyRenderer.render(templateName, locale(), request(), response(), new SoyMapData(), activeDelegatePackages));
+        return Html.apply(soyRenderer.render(templateName, locale(), request(), response(), soyRecord, activeDelegatePackages));
     }
 
     public Html html(final String templateName, final SoyRecord model) {

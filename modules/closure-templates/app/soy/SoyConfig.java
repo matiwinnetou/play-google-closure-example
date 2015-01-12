@@ -1,8 +1,10 @@
-package instrastructure;
+package soy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.template.soy.SoyFileSet;
@@ -15,7 +17,6 @@ import com.google.template.soy.tofu.SoyTofuOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import play.Application;
-import soy.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,6 +29,9 @@ public class SoyConfig {
 
     @Inject
     private Application application;
+
+    @Inject
+    private Gson gson;
 
     @Bean
     public SoyTemplateLoader soyTemplateLoader() {
@@ -57,7 +61,7 @@ public class SoyConfig {
     @Bean
     @Named("googleClosureInjector")
     public Injector googleClosureInjector() {
-        return Guice.createInjector(new SoyModule(), new MySoyModule());
+        return Guice.createInjector(new SoyModule(), new SoyModule2(gson));
     }
 
     @Bean

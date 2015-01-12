@@ -52,7 +52,9 @@ public class SoyTemplateLoader {
 
     private void prepareDevFileSet(final SoyFileSet.Builder builder) {
         builder.setSoyAstCache(new SoyAstCache());
-        Resources.findSoyFiles(Resources.resources(application)).forEach(url -> builder.addVolatile(new File(url.getFile())));
+
+        Resources.findSoyFiles(Resources.resources(application))
+                .forEach(url -> builder.addVolatile(new File(url.getFile())));
     }
 
 }
