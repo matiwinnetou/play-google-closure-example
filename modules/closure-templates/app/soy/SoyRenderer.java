@@ -6,6 +6,7 @@ import com.google.template.soy.data.SoyMapData;
 import com.google.template.soy.data.SoyRecord;
 import com.google.template.soy.msgs.SoyMsgBundle;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
+import com.google.template.soy.shared.SoyCssRenamingMap;
 import com.google.template.soy.shared.SoyIdRenamingMap;
 import com.google.template.soy.tofu.SoyTofu;
 import play.mvc.Http;
@@ -20,19 +21,22 @@ import java.util.Set;
 public class SoyRenderer {
 
     private final SoyCompiler soyCompiler;
-    private final SoyIdRenamingMap soyIdRenamingMap;
     private final SoyMsgBundleLoader soyMsgBundleLoader;
     private final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList;
+    private final SoyIdRenamingMap soyIdRenamingMap;
+    private final SoyCssRenamingMap soyCssRenamingMap;
 
     @Inject
     public SoyRenderer(final SoyCompiler soyCompiler,
                        final SoyMsgBundleLoader soyMsgBundleLoader,
-                       @Named("runtimeDataProviders") final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList,
-                       final SoyIdRenamingMap soyIdRenamingMap) {
+                       @Named("soyRuntimeDataProviders") final List<SoyRuntimeDataProvider> soyRuntimeDataProviderList,
+                       final SoyIdRenamingMap soyIdRenamingMap,
+                       final SoyCssRenamingMap soyCssRenamingMap) {
         this.soyCompiler = soyCompiler;
         this.soyMsgBundleLoader = soyMsgBundleLoader;
         this.soyIdRenamingMap = soyIdRenamingMap;
         this.soyRuntimeDataProviderList = soyRuntimeDataProviderList;
+        this.soyCssRenamingMap = soyCssRenamingMap;
     }
 
     public String render(final String templateName,
@@ -48,6 +52,7 @@ public class SoyRenderer {
                 .setActiveDelegatePackageNames(activeDelegatePackages)
                 .setIdRenamingMap(soyIdRenamingMap)
                 .setData(model)
+                .setCssRenamingMap(soyCssRenamingMap)
                 .setIjData(ijData(request, response, model))
                 .setMsgBundle(soyMsgBundle)
                 .render();

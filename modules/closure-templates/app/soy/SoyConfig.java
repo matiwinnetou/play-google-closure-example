@@ -9,6 +9,7 @@ import com.google.template.soy.SoyFileSet;
 import com.google.template.soy.SoyModule;
 import com.google.template.soy.data.SoyValueHelper;
 import com.google.template.soy.msgs.SoyMsgBundleLoader;
+import com.google.template.soy.shared.SoyCssRenamingMap;
 import com.google.template.soy.shared.SoyGeneralOptions;
 import com.google.template.soy.shared.SoyIdRenamingMap;
 import com.google.template.soy.tofu.SoyTofuOptions;
@@ -35,7 +36,7 @@ public class SoyConfig {
 
     @Bean
     public SoyTemplateLoader soyTemplateLoader() {
-        return new SoyTemplateLoader(application, soyFleSetBuilder(), compileTimeGlobals(), soyGeneralOptions());
+        return new SoyTemplateLoader(application, soyFleSetBuilder(), soyGeneralOptions());
     }
 
     @Bean
@@ -53,7 +54,7 @@ public class SoyConfig {
     }
 
     @Bean
-    @Named("runtimeDataProviders")
+    @Named("soyRuntimeDataProviders")
     public List<SoyRuntimeDataProvider> runtimeDataProviderList() {
         return ImmutableList.of(new HelloSoyRuntimeDataProvider());
     }
@@ -75,8 +76,17 @@ public class SoyConfig {
     }
 
     @Bean
+    public SoyGeneralOptions.CssHandlingScheme cssHandlingScheme() {
+        return SoyGeneralOptions.CssHandlingScheme.LITERAL;
+    }
+    
+    @Bean
     public SoyGeneralOptions soyGeneralOptions() {
-        return new SoyGeneralOptions();
+        final SoyGeneralOptions soyGeneralOptions = new SoyGeneralOptions();
+        soyGeneralOptions.setCssHandlingScheme(cssHandlingScheme());
+        soyGeneralOptions.setCompileTimeGlobals(compileTimeGlobals());
+
+        return soyGeneralOptions;
     }
 
     @Bean
@@ -94,7 +104,8 @@ public class SoyConfig {
         return new SoyRenderer(soyCompiler(),
                 soyMsgBundleLoader(),
                 runtimeDataProviderList(),
-                soyIdRenamingMap());
+                soyIdRenamingMap(),
+                soyCssRenamingMap());
     }
 
     @Bean
@@ -110,6 +121,11 @@ public class SoyConfig {
     @Bean
     public SoyIdRenamingMap soyIdRenamingMap() {
         return key -> "prefix.key";
+    }
+
+    @Bean
+    public SoyCssRenamingMap soyCssRenamingMap() {
+        return key -> key;
     }
 
 }
