@@ -2,7 +2,6 @@ package soy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -22,7 +21,6 @@ import soy.modules.SoyModule2;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -111,9 +109,7 @@ public class SoyConfig {
 
     @Bean
     public SoyIdRenamingMap soyIdRenamingMap() {
-        final HashMap<String, String> map = Maps.<String, String>newHashMap();
-
-        return key -> map.get(key);
+        return key -> "prefix.key";
     }
 
 }
